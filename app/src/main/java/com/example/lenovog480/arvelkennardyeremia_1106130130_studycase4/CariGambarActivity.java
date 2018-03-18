@@ -51,5 +51,5 @@ public class CariGambarActivity extends AppCompatActivity {
                 //. LOAD GAMBAR SAAT TERJADI KESALAHAN MEMUAT GMBR UTAMA
                 .error(R.drawable.salah)
                 .into(foto);
-    }
+    }}
 
