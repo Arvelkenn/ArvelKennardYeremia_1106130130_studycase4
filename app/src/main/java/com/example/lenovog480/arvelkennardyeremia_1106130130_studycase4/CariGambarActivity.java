@@ -21,8 +21,6 @@ public class CariGambarActivity extends AppCompatActivity {
     EditText pencarian;
     Button cari;
     ImageView foto;
-    //String fileUrl, src;
-    Bitmap bitmap;
     ProgressDialog pDialog;
 
     @Override
@@ -36,146 +34,22 @@ public class CariGambarActivity extends AppCompatActivity {
         cari = (Button) findViewById(R.id.btnCari);
         foto = (ImageView) findViewById(R.id.gambar);
 
-        //loadImageFromURL();
-        //getBitmapFromURL(src);
 
-//        cari.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new LoadImage().execute(fileUrl);
-//                Glide.with(CariGambarActivity.this).load(pencarian.getText().toString()).into(foto);
     }
-    public void search(View view) {loadImagetInit();
+    public void search(View view) {
+        foto = (ImageView)findViewById(R.id.gambar);
+        pencarian = (EditText)findViewById(R.id.edtCariGamber);
+
+        String urlGambar = pencarian.getText().toString();
+//        String iki = "https://www.google.co.id/imgres?imgurl=https%3A%2F%2Fstatic1.squarespace.com%2Fstatic%2F5a60c63090badeabae267f0c%2Ft%2F5a6a42ed9140b7f06fc4a336%2F1516913392661%2Fwaitlogo-01.png&imgrefurl=https%3A%2F%2Fwww.annaweddle.com%2Fwait%2F&docid=NALzdduGvBKh4M&tbnid=xjuZo5ZxCXnBkM%3A&vet=12ahUKEwi6sb3b6PXZAhWJqI8KHVBEAXo4ZBAzKC8wL3oECAAQMQ..i&w=792&h=525&bih=675&biw=1366&q=wait%20logo&ved=2ahUKEwi6sb3b6PXZAhWJqI8KHVBEAXo4ZBAzKC8wL3oECAAQMQ&iact=mrc&uact=8";
+//        String salah = "https://www.google.co.id/imgres?imgurl=https%3A%2F%2F61978.apps.zdusercontent.com%2F61978%2Fassets%2F1506471217-f11f72e1d66993b37ef07602ecff83f2%2Flogo.png&imgrefurl=https%3A%2F%2Fwww.zendesk.com%2Fapps%2Fsupport%2Foops%2F&docid=8oH5MlpL36WPXM&tbnid=4ccrvp2ZZD8y3M%3A&vet=10ahUKEwjX5NP-6PXZAhXBq48KHQrmDGIQMwhOKBUwFQ..i&w=320&h=320&bih=675&biw=1366&q=oops%20logo&ved=0ahUKEwjX5NP-6PXZAhXBq48KHQrmDGIQMwhOKBUwFQ&iact=mrc&uact=8"
+        Glide.with(CariGambarActivity.this)
+                // LOAD URL DARI INTERNET
+                .load(urlGambar)
+                // LOAD GAMBAR AWAL SEBELUM GAMBAR UTAMA MUNCUL, BISA DARI LOKAL DAN INTERNET
+                .placeholder(R.drawable.iki)
+                //. LOAD GAMBAR SAAT TERJADI KESALAHAN MEMUAT GMBR UTAMA
+                .error(R.drawable.salah)
+                .into(foto);
     }
-
-    private void loadImagetInit() {
-        String ImgUrl = pencarian.getText().toString();
-        //AsyncTask mencari gambar di internet
-        new loadImage().execute(ImgUrl);
-    }
-
-    private class loadImage extends AsyncTask<String, Void, Bitmap> {
-        //method ketika proses asynctask belum dimulai
-        @Override
-        protected void onPreExecute() { //awal dari pengerjaan dalam menampilkan loading
-            super.onPreExecute();
-
-            // Membuat Progress Dialog
-            pDialog = new ProgressDialog(CariGambarActivity.this);
-
-            // Judul Progress Dialog
-            pDialog.setTitle("Downloading image");
-
-            // Seting message Progress Dialog
-            pDialog.setMessage("Loading...");
-
-            // menampilkan Progress Dialog
-            pDialog.show();
-        }
-        //method saat proses asynctask dijalankan
-        @Override
-        protected Bitmap doInBackground(String... params) { //apa yang sedang terjadi ketika dijalankan memasukkan data ke list view
-            Bitmap a = null;
-            try {
-                //download gambar dr url
-                URL x = new URL(params[0]);
-                //konversi gambar ke bitmap (decode to bitmap)
-
-                a = BitmapFactory.decodeStream((InputStream) x.getContent());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return a;
-        }
-
-        //method sesudah asynctask sudah dijalankan
-        @Override
-        protected void onPostExecute(Bitmap a) { // akhir dari pengerjaan ketika di klik lg button maka akan menampilkan gambar yang telah dicari
-            super.onPostExecute(a);
-            //menampung gambar ke imageview dan menampilkan
-            foto.setImageBitmap(a);
-            //menghilangkan progress dialog
-            pDialog.dismiss();
-        }
-    }
-}
-
-
-    /*public Bitmap getBitmapFromURL(String src) {
-        try
-        {
-            java.net.URL url = new java.net.URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private class LoadImage extends AsyncTask<String, String, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... args) {
-            try {
-                bitmap = BitmapFactory.decodeStream((InputStream)new URL(args[0]).getContent());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(CariGambarActivity.this);
-            pDialog.setMessage("Loading Image...");
-            pDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if(bitmap != null){
-                ImageView img = new ImageView(CariGambarActivity.this);
-                img.setImageBitmap(bitmap);
-                pDialog.dismiss();
-            }else{
-
-                pDialog.dismiss();
-                Toast.makeText(CariGambarActivity.this, "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
-    public boolean loadImageFromURL(){
-        try {
-
-
-            URL myFileUrl = new URL (fileUrl);
-            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-
-            InputStream is = conn.getInputStream();
-
-            foto.setImageBitmap(BitmapFactory.decodeStream(is));
-
-            return true;
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }*/
 
